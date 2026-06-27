@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Perdas - Fazenda Oásis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <style>
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none; 
+            scrollbar-width: none; 
+        }
+
+        .input-icon-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .input-icon-wrapper svg {
+            position: absolute;
+            left: 12px;
+            color: #9CA3AF;
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+            transition: color 0.2s;
+        }
+        .input-with-icon {
+            width: 100%;
+            padding: 10px 12px 10px 40px;
+            background-color: #F9FAFB;
+            border: 2px solid #E5E7EB;
+            border-radius: 0.75rem;
+            color: #111827;
+            transition: all 0.2s;
+            appearance: none;
+        }
+        .input-with-icon:focus {
+            background-color: #FFFFFF;
+            border-color: #10B981;
+            outline: none;
+        }
+        .input-icon-wrapper:focus-within svg {
+            color: #10B981;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col font-sans text-gray-800 overflow-x-hidden">
+
+    <header class="bg-white shadow-sm border-b border-gray-200 z-10 relative">
+        <div class="w-full px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row items-center justify-between">
+            <div class="flex items-center gap-4">
+                <img src="https://i.imgur.com/wEozr34.png" alt="Logo Fazenda Oásis" class="h-14 w-auto object-contain mix-blend-multiply">
+                <div>
+                    <h1 class="text-2xl font-extrabold text-green-800 tracking-tight">Registro de Perdas</h1>
+                    <h2 class="text-sm font-medium text-gray-500">Fazenda Oásis</h2>
+                </div>
+            </div>
+            
+            <div class="mt-4 md:mt-0 flex gap-6 bg-green-50 px-5 py-2 rounded-xl border border-green-100 shadow-inner">
+                <div class="flex flex-col text-center">
+                    <span class="text-[10px] font-bold text-green-800 uppercase tracking-wider">Data</span>
+                    <span id="data-atual" class="font-semibold text-gray-700 text-sm">--/--/----</span>
+                </div>
+                <div class="w-px bg-green-200"></div>
+                <div class="flex flex-col text-center">
+                    <span class="text-[10px] font-bold text-green-800 uppercase tracking-wider">Semana</span>
+                    <span id="semana-atual" class="font-semibold text-gray-700 text-sm">--</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 w-full p-4 sm:px-6 lg:px-8 py-6">
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 h-full">
+            
+            <div class="xl:col-span-4 flex flex-col h-full bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                <div class="bg-green-700 text-white py-3 px-6">
+                    <h3 class="text-md font-bold flex items-center gap-2">
+                        <svg class="w-5 h-5 text-green-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        Novo Preenchimento
+                    </h3>
+                </div>
+                
+                <form id="registro-form" class="p-6 space-y-4 flex-1 overflow-y-auto no-scrollbar">
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="bloco" class="block text-xs font-bold text-gray-600 uppercase mb-1">Bloco</label>
+                            <div class="input-icon-wrapper">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                                <select id="bloco" name="bloco" onchange="toggleOutros('bloco', 'bloco-outro')" class="input-with-icon font-semibold text-sm">
+                                    <option value="" disabled selected>Selecionar...</option>
+                                    <option value="01">01</option>
+                                    <option value="02">02</option>
+                                    <option value="03">03</option>
+                                    <option value="04">04</option>
+                                    <option value="05">05</option>
+                                    <option value="06">06</option>
+                                    <option value="07">07</option>
+                                    <option value="08">08</option>
+                                    <option value="09">09</option>
+                                    <option value="10">10</option>
+                                    <option value="Outro">Outro...</option>
+                                </select>
+                            </div>
+                            <input type="text" id="bloco-outro" placeholder="Especifique..." class="hidden mt-2 w-full px-4 py-2 bg-gray-50 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:outline-none text-sm">
+                        </div>
+
+                        <div>
+                            <label for="cultura" class="block text-xs font-bold text-gray-600 uppercase mb-1">Cultura</label>
+                            <div class="input-icon-wrapper">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
+                                <select id="cultura" name="cultura" onchange="toggleOutros('cultura', 'cultura-outro')" class="input-with-icon font-semibold text-sm">
+                                    <option value="" disabled selected>Selecionar...</option>
+                                    <option value="Brócolis">Brócolis</option>
+                                    <option value="Couve flor">Couve Flor</option>
+                                    <option value="Outro">Outro...</option>
+                                </select>
+                            </div>
+                            <input type="text" id="cultura-outro" placeholder="Qual?" class="hidden mt-2 w-full px-4 py-2 bg-gray-50 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:outline-none text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="variedade" class="block text-xs font-bold text-gray-600 uppercase mb-1">Variedade</label>
+                        <div class="input-icon-wrapper">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
+                            <select id="variedade" name="variedade" onchange="toggleOutros('variedade', 'variedade-outro')" class="input-with-icon font-semibold text-sm">
+                                <option value="" disabled selected>Selecione...</option>
+                                <option value="Sygenta BRO 68">Sygenta BRO 68</option>
+                                <option value="TSV MAster">TSV MAster</option>
+                                <option value="Pharlap">Pharlap</option>
+                                <option value="Outro">Outro...</option>
+                            </select>
+                        </div>
+                        <input type="text" id="variedade-outro" placeholder="Qual?" class="hidden mt-2 w-full px-4 py-2 bg-gray-50 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:outline-none text-sm">
+                    </div>
+
+                    <!-- Novo Campo: Causa -->
+                    <div>
+                        <label for="causa" class="block text-xs font-bold text-red-600 uppercase mb-1">Causa das Perdas</label>
+                        <div class="input-icon-wrapper">
+                            <svg fill="none" stroke="currentColor" class="text-red-400" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            <input type="text" id="causa" placeholder="Ex: Chuva forte, Pragas, Seca..." class="input-with-icon font-semibold text-sm border-red-200 focus:border-red-500">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="total-transplantado" class="block text-xs font-bold text-gray-600 uppercase mb-1">Qtd. Transplantada</label>
+                            <div class="input-icon-wrapper">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                                <input type="number" id="total-transplantado" min="0" oninput="calcularPerdas()" placeholder="Ex: 5000" class="input-with-icon font-semibold text-sm">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="mortalidade" class="block text-xs font-bold text-gray-600 uppercase mb-1">Mortalidade (Perda)</label>
+                            <div class="input-icon-wrapper">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                                <input type="number" id="mortalidade" min="0" oninput="calcularPerdas()" placeholder="Ex: 150" class="input-with-icon font-semibold text-sm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-2 bg-gray-50 border-2 border-gray-100 rounded-xl p-3 shadow-sm">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-white p-2 rounded-lg border-2 border-red-100 flex flex-col justify-center items-center text-center">
+                                <span class="text-[10px] font-bold text-red-500 uppercase tracking-wide">Perda</span>
+                                <span id="porcentagem-perda" class="text-lg font-black text-red-600 mt-1">0.00%</span>
+                            </div>
+                            
+                            <div class="bg-white p-2 rounded-lg border-2 border-green-200 flex flex-col justify-center items-center text-center">
+                                <span class="text-[10px] font-bold text-green-600 uppercase tracking-wide">Sobreviventes</span>
+                                <span id="plantas-campo" class="text-lg font-black text-green-700 mt-1">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="p-4 bg-gray-50 border-t border-gray-200 flex gap-2">
+                    <button type="button" onclick="limparFormulario()" class="w-1/3 bg-white border-2 border-gray-300 hover:bg-gray-100 text-gray-700 font-bold py-2.5 px-3 rounded-xl transition duration-200 text-sm">
+                        Limpar
+                    </button>
+                    <button type="button" onclick="salvarRegistro()" class="w-2/3 bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-3 rounded-xl transition duration-200 shadow-md flex justify-center items-center gap-2 text-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                        Salvar Lote
+                    </button>
+                </div>
+            </div>
+
+            <div class="xl:col-span-8 flex flex-col h-full bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden relative">
+                
+                <div class="bg-gray-800 text-white py-3 px-6 flex flex-col sm:flex-row justify-between items-center z-10 gap-3 border-b border-gray-700">
+                    <h3 class="text-md font-bold flex items-center gap-2 w-full sm:w-auto">
+                        <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        Histórico
+                    </h3>
+                    
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <button onclick="baixarRelatorio('pdf')" class="flex-1 sm:flex-none flex justify-center items-center gap-1.5 bg-gray-700 hover:bg-gray-600 border border-gray-600 text-white text-xs font-bold py-2 px-3 rounded-lg transition-colors">
+                            <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                            Baixar PDF
+                        </button>
+                        <button onclick="enviarWhatsApp()" class="flex-1 sm:flex-none flex justify-center items-center gap-1.5 bg-[#25D366] hover:bg-[#1DA851] text-white text-xs font-bold py-2 px-3 rounded-lg transition-colors shadow-sm">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564c.173.087.289.129.332.202.043.073.043.423-.101.827z"></path></svg>
+                            Baixar Imagem + WhatsApp
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flex-1 overflow-x-auto bg-white">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider">Bloco</th>
+                                <th scope="col" class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider">Cult./Var.</th>
+                                <th scope="col" class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider">Causa</th>
+                                <th scope="col" class="px-4 py-3 text-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">Mortalidade</th>
+                                <th scope="col" class="px-4 py-3 text-right text-[10px] font-bold text-gray-500 uppercase tracking-wider">Perda %</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historico-tabela" class="bg-white divide-y divide-gray-100">
+                            <tr id="empty-state">
+                                <td colspan="5" class="px-6 py-20 text-center text-gray-400">
+                                    <svg class="mx-auto h-12 w-12 text-gray-200 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    <p class="text-sm">Nenhum lote registrado.</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Ele fica fixo fora da tela, formatado perfeitamente como um "cartão/documento" centrado -->
+    <div id="export-layout-container" class="fixed top-0 left-[-9999px] w-[650px] bg-white text-gray-800 font-sans z-[-1] pointer-events-none">
+        <div class="relative w-full p-8 bg-white" id="export-capture-area">
+            
+            <!-- Marca d'água -->
+            <div class="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none z-0">
+                <img src="https://i.imgur.com/wEozr34.png" alt="Marca" class="w-3/4 grayscale">
+            </div>
+
+            <!-- Header Centralizado -->
+            <div class="relative z-10 text-center border-b-4 border-green-700 pb-6 mb-8">
+                <img src="https://i.imgur.com/wEozr34.png" alt="Logo" class="h-24 mx-auto mb-4 object-contain">
+                <h1 class="text-3xl font-black text-green-900 uppercase tracking-widest">Relatório de Perdas</h1>
+                <h2 class="text-lg font-bold text-gray-500 mt-1 uppercase">Fazenda Oásis</h2>
+                
+                <div class="flex justify-center items-center gap-4 mt-6">
+                    <div class="bg-gray-100 px-4 py-2 rounded-lg text-center">
+                        <span class="block text-xs font-bold text-gray-500 uppercase">Data do Relatório</span>
+                        <span class="text-lg font-black text-gray-800" id="export-data"></span>
+                    </div>
+                    <div class="bg-gray-100 px-4 py-2 rounded-lg text-center">
+                        <span class="block text-xs font-bold text-gray-500 uppercase">Semana</span>
+                        <span class="text-lg font-black text-gray-800" id="export-semana"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aqui vão entrar os blocos (cards centrais) gerados pelo JS -->
+            <div id="export-cards-container" class="relative z-10 flex flex-col gap-6 w-full">
+                <!-- Gerado dinamicamente -->
+            </div>
+
+            <div class="relative z-10 mt-8 pt-4 border-t border-gray-300 text-center">
+                <p class="text-xs font-bold text-gray-400">Documento gerado automaticamente pelo Sistema de Controle - Fazenda Oásis</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modais (Sucesso e Erro) -->
+    <div id="modal-sucesso" class="fixed inset-0 bg-gray-900 bg-opacity-60 hidden flex items-center justify-center z-50 backdrop-blur-sm">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-sm w-full mx-4">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <h3 class="text-xl font-extrabold text-gray-900 mb-2">Lote Salvo!</h3>
+            <p class="text-sm text-gray-600 mb-6">O registro foi adicionado ao histórico.</p>
+            <button onclick="fecharModal('modal-sucesso')" class="w-full bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 font-bold transition-colors">Continuar</button>
+        </div>
+    </div>
+
+    <div id="modal-erro" class="fixed inset-0 bg-gray-900 bg-opacity-60 hidden flex items-center justify-center z-50 backdrop-blur-sm">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-sm w-full mx-4">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            </div>
+            <h3 class="text-xl font-extrabold text-gray-900 mb-2">Atenção</h3>
+            <p id="msg-erro" class="text-sm text-gray-600 mb-6">Preencha os campos.</p>
+            <button onclick="fecharModal('modal-erro')" class="w-full bg-red-600 text-white px-6 py-3 rounded-xl hover:bg-red-700 font-bold transition-colors">Corrigir</button>
+        </div>
+    </div>
+
+    <script>
+        // Array global para armazenar os dados e poder desenhar o layout bonito de exportação
+        let registrosHistorico = [];
+
+        window.onload = function() {
+            configurarDataESemana();
+        };
+
+        function configurarDataESemana() {
+            const hoje = new Date();
+            const dataFormatada = hoje.toLocaleDateString('pt-BR');
+            document.getElementById('data-atual').innerText = dataFormatada;
+            document.getElementById('export-data').innerText = dataFormatada;
+
+            const numeroSemana = obterNumeroDaSemana(hoje);
+            document.getElementById('semana-atual').innerText = numeroSemana;
+            document.getElementById('export-semana').innerText = numeroSemana;
+        }
+
+        function obterNumeroDaSemana(d) {
+            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+            const inicioDoAno = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - inicioDoAno) / 86400000) + 1) / 7);
+        }
+
+        function toggleOutros(selectId, inputId) {
+            const selectElement = document.getElementById(selectId);
+            const inputElement = document.getElementById(inputId);
+            
+            if (selectElement.value === 'Outro') {
+                inputElement.classList.remove('hidden');
+                inputElement.focus();
+            } else {
+                inputElement.classList.add('hidden');
+                inputElement.value = ''; 
+            }
+        }
+
+        function obterValorReal(idSelect, idInput) {
+            const select = document.getElementById(idSelect).value;
+            if (select === 'Outro') {
+                return document.getElementById(idInput).value || 'Não especificado';
+            }
+            return select || '-';
+        }
+
+        function calcularPerdas() {
+            const inputTotal = document.getElementById('total-transplantado').value;
+            const inputMortas = document.getElementById('mortalidade').value;
+            
+            const total = parseFloat(inputTotal) || 0;
+            const mortas = parseFloat(inputMortas) || 0;
+
+            let plantasEmCampo = 0;
+            let porcentagemPerda = 0;
+
+            if (total > 0) {
+                plantasEmCampo = total - mortas;
+                if(plantasEmCampo < 0) plantasEmCampo = 0; 
+                
+                porcentagemPerda = (mortas / total) * 100;
+                if(porcentagemPerda > 100) porcentagemPerda = 100;
+            }
+
+            document.getElementById('plantas-campo').innerText = plantasEmCampo.toLocaleString('pt-BR');
+            document.getElementById('porcentagem-perda').innerText = porcentagemPerda.toFixed(2) + '%';
+        }
+
+        function exibirErro(mensagem) {
+            document.getElementById('msg-erro').innerText = mensagem;
+            document.getElementById('modal-erro').classList.remove('hidden');
+        }
+
+        function salvarRegistro() {
+            const totalInput = document.getElementById('total-transplantado').value;
+            const total = parseFloat(totalInput) || 0;
+            
+            if(total <= 0) {
+                exibirErro("Você precisa informar uma quantidade válida no 'Total Transplantado'.");
+                return;
+            }
+
+            const bloco = obterValorReal('bloco', 'bloco-outro');
+            const cultura = obterValorReal('cultura', 'cultura-outro');
+            const variedade = obterValorReal('variedade', 'variedade-outro');
+            
+            // Pega o valor da nova causa
+            let causa = document.getElementById('causa').value.trim();
+            if(!causa) causa = "Não informada";
+
+            const mortasInput = document.getElementById('mortalidade').value;
+            const mortas = parseFloat(mortasInput) || 0;
+            
+            let sobreviventes = total - mortas;
+            if(sobreviventes < 0) sobreviventes = 0;
+            let perda = ((mortas / total) * 100).toFixed(2);
+            if(perda > 100) perda = 100.00;
+
+            const registro = {
+                bloco, cultura, variedade, causa, total, mortas, sobreviventes, perda
+            };
+
+            // Adiciona no array global
+            registrosHistorico.unshift(registro);
+
+            // Atualiza a tabela na tela
+            renderizarTabela();
+            document.getElementById('modal-sucesso').classList.remove('hidden');
+        }
+
+        function renderizarTabela() {
+            const tbody = document.getElementById('historico-tabela');
+            tbody.innerHTML = ''; // limpa
+            
+            if(registrosHistorico.length === 0) {
+                tbody.innerHTML = `
+                    <tr id="empty-state">
+                        <td colspan="5" class="px-6 py-20 text-center text-gray-400">
+                            <p class="text-sm">Nenhum lote registrado.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            registrosHistorico.forEach(reg => {
+                let badgeClass = 'bg-gray-100 text-gray-800';
+                if(reg.perda > 15) badgeClass = 'bg-red-100 text-red-800';
+                else if(reg.perda > 5) badgeClass = 'bg-yellow-100 text-yellow-800';
+                else if(reg.perda > 0) badgeClass = 'bg-green-100 text-green-800';
+
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-green-50 transition-colors duration-150';
+                tr.innerHTML = `
+                    <td class="px-4 py-3 whitespace-nowrap text-xs font-bold text-gray-900">${reg.bloco}</td>
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <div class="text-xs font-bold text-gray-900">${reg.cultura}</div>
+                        <div class="text-[10px] text-gray-500">${reg.variedade}</div>
+                    </td>
+                    <td class="px-4 py-3 text-xs text-gray-700 italic max-w-[150px] truncate" title="${reg.causa}">
+                        ${reg.causa}
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-center">
+                        <span class="text-xs font-bold text-red-600 block">${reg.mortas.toLocaleString('pt-BR')} mortas</span>
+                        <span class="text-[10px] text-gray-500 block">de ${reg.total.toLocaleString('pt-BR')}</span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap text-right">
+                        <span class="px-2 py-1 inline-flex text-[10px] leading-4 font-black rounded-full ${badgeClass}">
+                            ${reg.perda}%
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function fecharModal(idModal) {
+            document.getElementById(idModal).classList.add('hidden');
+            if(idModal === 'modal-sucesso') {
+                limparFormulario();
+            }
+        }
+
+        function limparFormulario() {
+            document.getElementById('registro-form').reset();
+            document.getElementById('bloco-outro').classList.add('hidden');
+            document.getElementById('cultura-outro').classList.add('hidden');
+            document.getElementById('variedade-outro').classList.add('hidden');
+            calcularPerdas();
+        }
+
+        function construirLayoutExportacao() {
+            const container = document.getElementById('export-cards-container');
+            container.innerHTML = ''; // Limpa anterior
+
+            registrosHistorico.forEach((reg) => {
+                // Monta o Card Centralizado
+                const cardHtml = `
+                    <div class="bg-gray-50 border-2 border-gray-200 rounded-2xl p-6 text-center shadow-sm w-full mx-auto">
+                        <h3 class="text-xl font-black text-green-800 uppercase border-b-2 border-gray-200 pb-3 mb-4">
+                            Bloco ${reg.bloco} - ${reg.cultura}
+                        </h3>
+                        
+                        <p class="text-sm text-gray-500 font-bold mb-4">Variedade: <span class="text-gray-800">${reg.variedade}</span></p>
+
+                        <div class="flex justify-center gap-6 mb-5">
+                            <div class="text-center bg-white px-4 py-2 border border-gray-200 rounded-xl w-32">
+                                <span class="block text-[10px] font-bold text-gray-400 uppercase">Plantado</span>
+                                <span class="block text-lg font-black text-gray-700">${reg.total.toLocaleString('pt-BR')}</span>
+                            </div>
+                            
+                            <div class="text-center bg-red-50 px-4 py-2 border border-red-200 rounded-xl w-32">
+                                <span class="block text-[10px] font-bold text-red-400 uppercase">Mortas</span>
+                                <span class="block text-lg font-black text-red-600">${reg.mortas.toLocaleString('pt-BR')}</span>
+                            </div>
+                            
+                            <div class="text-center bg-green-50 px-4 py-2 border border-green-200 rounded-xl w-32">
+                                <span class="block text-[10px] font-bold text-green-500 uppercase">Sobreviveu</span>
+                                <span class="block text-lg font-black text-green-700">${reg.sobreviventes.toLocaleString('pt-BR')}</span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-center justify-center bg-yellow-50 border border-yellow-200 p-3 rounded-xl mx-auto w-4/5">
+                            <span class="text-xs font-bold text-yellow-600 uppercase mb-1">Motivo / Causa da Perda:</span>
+                            <span class="text-base font-bold text-gray-800 text-center">${reg.causa}</span>
+                        </div>
+                        
+                        <div class="mt-4 pt-3 border-t border-gray-200">
+                            <p class="text-sm font-bold text-gray-500 uppercase">
+                                Taxa de Perda Total: <span class="text-red-600 text-xl ml-2 font-black">${reg.perda}%</span>
+                            </p>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHtml;
+            });
+        }
+
+        // Função que tira a foto da área de exportação formatada (650px de largura)
+        function capturarImagem(callback) {
+            construirLayoutExportacao();
+            
+            const area = document.getElementById('export-capture-area');
+            
+            html2canvas(area, { 
+                scale: 2, 
+                useCORS: true,
+                backgroundColor: "#ffffff",
+                windowWidth: 650 // Força a largura para não quebrar o layout
+            }).then(canvas => {
+                callback(canvas);
+            });
+        }
+
+        function baixarRelatorio(tipo) {
+            if(registrosHistorico.length === 0) {
+                exibirErro("Não há registros para exportar.");
+                return;
+            }
+
+            capturarImagem(function(canvas) {
+                if (tipo === 'pdf') {
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const imgData = canvas.toDataURL('image/png');
+                    const imgProps = pdf.getImageProperties(imgData);
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                    
+                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                    pdf.save(`Relatorio_Oasis_${document.getElementById('data-atual').innerText.replace(/\//g, '-')}.pdf`);
+                }
+            });
+        }
+
+        function enviarWhatsApp() {
+            if(registrosHistorico.length === 0) {
+                exibirErro("Não há registros no histórico para enviar ao WhatsApp.");
+                return;
+            }
+
+            // 1. Gera e Baixa o JPEG profissional
+            capturarImagem(function(canvas) {
+                const link = document.createElement('a');
+                link.download = `Relatorio_Oasis_${document.getElementById('data-atual').innerText.replace(/\//g, '-')}.jpg`;
+                // Usando JPEG para ser leve para o WhatsApp
+                link.href = canvas.toDataURL('image/jpeg', 0.9);
+                link.click(); // Dispara o download no dispositivo do usuário
+
+                // 2. Monta o texto para o WhatsApp (agora com a Causa)
+                let texto = "🚜 *RELATÓRIO DE PERDAS - FAZENDA OÁSIS* 🚜\n";
+                texto += `📅 *Data:* ${document.getElementById('data-atual').innerText} | *Semana:* ${document.getElementById('semana-atual').innerText}\n\n`;
+                
+                registrosHistorico.forEach((reg) => {
+                    texto += `=====================\n`;
+                    texto += `📍 *Bloco:* ${reg.bloco}\n`;
+                    texto += `🌱 *Cultura:* ${reg.cultura} (${reg.variedade})\n`;
+                    texto += `📦 *Plantado:* ${reg.total.toLocaleString('pt-BR')}\n`;
+                    texto += `💀 *Mortas:* ${reg.mortas.toLocaleString('pt-BR')}\n`;
+                    texto += `⚠️ *Causa:* ${reg.causa}\n`; // Causa adicionada ao texto
+                    texto += `📉 *Taxa de Perda:* ${reg.perda}%\n`;
+                });
+                
+                texto += `=====================\n`;
+                texto += `_📸 Segue a imagem do relatório detalhado anexa._`;
+
+                // 3. Abre o WhatsApp. Damos um delay pequeno para garantir que o download da imagem iniciou.
+                setTimeout(() => {
+                    const url = `https://wa.me/?text=${encodeURIComponent(texto)}`;
+                    window.open(url, '_blank');
+                }, 800);
+            });
+        }
+    </script>
+</body>
+</html>
