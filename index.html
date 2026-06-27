@@ -50,6 +50,7 @@
             transition: all 0.2s;
             appearance: none;
         }
+        
         .input-with-icon:focus {
             background-color: #FFFFFF;
             border-color: #10B981;
@@ -101,7 +102,7 @@
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label for="bloco" class="block text-xs font-bold text-gray-600 uppercase mb-1">Bloco</label>
+                            <label for="bloco" class="block text-xs font-bold text-gray-600 uppercase mb-1">Bloco <span class="text-red-500">*</span></label>
                             <div class="input-icon-wrapper">
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                                 <select id="bloco" name="bloco" onchange="toggleOutros('bloco', 'bloco-outro')" class="input-with-icon font-semibold text-sm">
@@ -123,7 +124,7 @@
                         </div>
 
                         <div>
-                            <label for="cultura" class="block text-xs font-bold text-gray-600 uppercase mb-1">Cultura</label>
+                            <label for="cultura" class="block text-xs font-bold text-gray-600 uppercase mb-1">Cultura <span class="text-red-500">*</span></label>
                             <div class="input-icon-wrapper">
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path></svg>
                                 <select id="cultura" name="cultura" onchange="toggleOutros('cultura', 'cultura-outro')" class="input-with-icon font-semibold text-sm">
@@ -138,11 +139,14 @@
                     </div>
 
                     <div>
-                        <label for="variedade" class="block text-xs font-bold text-gray-600 uppercase mb-1">Variedade</label>
+                        <label for="variedade" class="block text-xs font-bold text-gray-600 uppercase mb-1">
+                            Variedade <span class="text-[10px] text-gray-400 font-normal normal-case ml-1">(Opcional)</span>
+                        </label>
                         <div class="input-icon-wrapper">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
                             <select id="variedade" name="variedade" onchange="toggleOutros('variedade', 'variedade-outro')" class="input-with-icon font-semibold text-sm">
-                                <option value="" disabled selected>Selecione...</option>
+                                <!-- Opção padrão não é disabled, permitindo voltar para "vazio" -->
+                                <option value="" selected>Não informar</option>
                                 <option value="Sygenta BRO 68">Sygenta BRO 68</option>
                                 <option value="TSV MAster">TSV MAster</option>
                                 <option value="Pharlap">Pharlap</option>
@@ -152,7 +156,6 @@
                         <input type="text" id="variedade-outro" placeholder="Qual?" class="hidden mt-2 w-full px-4 py-2 bg-gray-50 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:outline-none text-sm">
                     </div>
 
-                    <!-- Novo Campo: Causa -->
                     <div>
                         <label for="causa" class="block text-xs font-bold text-red-600 uppercase mb-1">Causa das Perdas</label>
                         <div class="input-icon-wrapper">
@@ -163,7 +166,7 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label for="total-transplantado" class="block text-xs font-bold text-gray-600 uppercase mb-1">Qtd. Transplantada</label>
+                            <label for="total-transplantado" class="block text-xs font-bold text-gray-600 uppercase mb-1">Qtd. Transplantada <span class="text-red-500">*</span></label>
                             <div class="input-icon-wrapper">
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
                                 <input type="number" id="total-transplantado" min="0" oninput="calcularPerdas()" placeholder="Ex: 5000" class="input-with-icon font-semibold text-sm">
@@ -240,6 +243,7 @@
                         <tbody id="historico-tabela" class="bg-white divide-y divide-gray-100">
                             <tr id="empty-state">
                                 <td colspan="6" class="px-6 py-20 text-center text-gray-400">
+                                    <svg class="mx-auto h-12 w-12 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
                                     <p class="text-sm">Nenhum lote registrado.</p>
@@ -252,16 +256,13 @@
         </div>
     </main>
 
-    <!-- Ele fica fixo fora da tela, formatado perfeitamente como um "cartão/documento" centrado -->
     <div id="export-layout-container" class="fixed top-0 left-[-9999px] w-[650px] bg-white text-gray-800 font-sans z-[-1] pointer-events-none">
         <div class="relative w-full p-8 bg-white" id="export-capture-area">
             
-            <!-- Marca d'água -->
             <div class="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none z-0">
                 <img src="https://i.imgur.com/wEozr34.png" alt="Marca" class="w-3/4 grayscale">
             </div>
 
-            <!-- Header Centralizado -->
             <div class="relative z-10 text-center border-b-4 border-green-700 pb-6 mb-8">
                 <img src="https://i.imgur.com/wEozr34.png" alt="Logo" class="h-24 mx-auto mb-4 object-contain">
                 <h1 class="text-3xl font-black text-green-900 uppercase tracking-widest">Relatório de Perdas</h1>
@@ -279,9 +280,7 @@
                 </div>
             </div>
 
-            <!-- Aqui vão entrar os blocos (cards centrais) gerados pelo JS -->
             <div id="export-cards-container" class="relative z-10 flex flex-col gap-6 w-full">
-                <!-- Gerado dinamicamente -->
             </div>
 
             <div class="relative z-10 mt-8 pt-4 border-t border-gray-300 text-center">
@@ -290,7 +289,6 @@
         </div>
     </div>
 
-    <!-- Modais (Sucesso e Erro) -->
     <div id="modal-sucesso" class="fixed inset-0 bg-gray-900 bg-opacity-60 hidden flex items-center justify-center z-50 backdrop-blur-sm">
         <div class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-sm w-full mx-4">
             <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -328,7 +326,6 @@
     </div>
 
     <script>
-        // Array global para armazenar os dados e poder desenhar o layout bonito de exportação
         let registrosHistorico = [];
         let idEdicaoAtual = null;
         let idApagarAtual = null;
@@ -404,6 +401,19 @@
         }
 
         function salvarRegistro() {
+            // Trava de segurança para campos obrigatórios
+            const blocoSelect = document.getElementById('bloco').value;
+            if (!blocoSelect) {
+                exibirErro("Por favor, selecione um Bloco (Campo obrigatório).");
+                return;
+            }
+
+            const culturaSelect = document.getElementById('cultura').value;
+            if (!culturaSelect) {
+                exibirErro("Por favor, selecione a Cultura (Campo obrigatório).");
+                return;
+            }
+
             const totalInput = document.getElementById('total-transplantado').value;
             const total = parseFloat(totalInput) || 0;
             
@@ -414,7 +424,14 @@
 
             const bloco = obterValorReal('bloco', 'bloco-outro');
             const cultura = obterValorReal('cultura', 'cultura-outro');
-            const variedade = obterValorReal('variedade', 'variedade-outro');
+            
+            // Tratamento específico e elegante para a Variedade (Opcional)
+            let variedade = document.getElementById('variedade').value;
+            if (variedade === 'Outro') {
+                variedade = document.getElementById('variedade-outro').value || 'Não informada';
+            } else if (!variedade) {
+                variedade = 'Não informada';
+            }
             
             let causa = document.getElementById('causa').value.trim();
             if(!causa) causa = "Não informada";
@@ -433,7 +450,6 @@
             };
 
             if (idEdicaoAtual !== null) {
-                // Atualizando existente
                 const index = registrosHistorico.findIndex(r => r.id === idEdicaoAtual);
                 if (index > -1) {
                     registrosHistorico[index] = registro;
@@ -441,7 +457,6 @@
                 idEdicaoAtual = null;
                 document.getElementById('btn-salvar-texto').innerText = 'Salvar Lote';
             } else {
-                // Adiciona novo no topo
                 registrosHistorico.unshift(registro);
             }
 
@@ -496,10 +511,15 @@
                 select.value = valor;
                 input.classList.add('hidden');
                 input.value = '';
+            } else if (valor === 'Não informada' || valor === '') {
+                // Seleciona a opção base de ignorar quando for o campo Variedade
+                select.value = '';
+                input.classList.add('hidden');
+                input.value = '';
             } else {
                 select.value = 'Outro';
                 input.classList.remove('hidden');
-                input.value = valor !== 'Não especificado' ? valor : '';
+                input.value = (valor !== 'Não especificado' && valor !== 'Não informada') ? valor : '';
             }
         }
 
@@ -511,7 +531,7 @@
 
         function renderizarTabela() {
             const tbody = document.getElementById('historico-tabela');
-            tbody.innerHTML = ''; // limpa
+            tbody.innerHTML = ''; 
             
             if(registrosHistorico.length === 0) {
                 tbody.innerHTML = `
@@ -530,13 +550,18 @@
                 else if(reg.perda > 5) badgeClass = 'bg-yellow-100 text-yellow-800';
                 else if(reg.perda > 0) badgeClass = 'bg-green-100 text-green-800';
 
+                // Se não há variedade, deixa sutil o texto na tabela
+                const infoVariedade = reg.variedade !== 'Não informada' 
+                    ? `<div class="text-[10px] text-gray-500">${reg.variedade}</div>` 
+                    : `<div class="text-[10px] text-gray-400 italic">Sem variedade</div>`;
+
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-green-50 transition-colors duration-150';
                 tr.innerHTML = `
                     <td class="px-4 py-3 whitespace-nowrap text-xs font-bold text-gray-900">${reg.bloco}</td>
                     <td class="px-4 py-3 whitespace-nowrap">
                         <div class="text-xs font-bold text-gray-900">${reg.cultura}</div>
-                        <div class="text-[10px] text-gray-500">${reg.variedade}</div>
+                        ${infoVariedade}
                     </td>
                     <td class="px-4 py-3 text-xs text-gray-700 italic max-w-[150px] truncate" title="${reg.causa}">
                         ${reg.causa}
@@ -582,17 +607,18 @@
 
         function construirLayoutExportacao() {
             const container = document.getElementById('export-cards-container');
-            container.innerHTML = ''; // Limpa anterior
+            container.innerHTML = ''; 
 
             registrosHistorico.forEach((reg) => {
-                // Monta o Card Centralizado
+                const exibeVariedade = reg.variedade !== 'Não informada' ? reg.variedade : 'Não informada';
+
                 const cardHtml = `
                     <div class="bg-gray-50 border-2 border-gray-200 rounded-2xl p-6 text-center shadow-sm w-full mx-auto">
                         <h3 class="text-xl font-black text-green-800 uppercase border-b-2 border-gray-200 pb-3 mb-4">
                             Bloco ${reg.bloco} - ${reg.cultura}
                         </h3>
                         
-                        <p class="text-sm text-gray-500 font-bold mb-4">Variedade: <span class="text-gray-800">${reg.variedade}</span></p>
+                        <p class="text-sm text-gray-500 font-bold mb-4">Variedade: <span class="text-gray-800">${exibeVariedade}</span></p>
 
                         <div class="flex justify-center gap-6 mb-5">
                             <div class="text-center bg-white px-4 py-2 border border-gray-200 rounded-xl w-32">
@@ -627,7 +653,6 @@
             });
         }
 
-        // Função que tira a foto da área de exportação formatada (650px de largura)
         function capturarImagem(callback) {
             construirLayoutExportacao();
             
@@ -671,14 +696,15 @@
             }
 
             capturarImagem(function(canvas) {
-                // 1. Monta o texto para o WhatsApp
                 let texto = "🚜 *RELATÓRIO DE PERDAS - FAZENDA OÁSIS* 🚜\n";
                 texto += `📅 *Data:* ${document.getElementById('data-atual').innerText} | *Semana:* ${document.getElementById('semana-atual').innerText}\n\n`;
                 
                 registrosHistorico.forEach((reg) => {
+                    const showVariedade = reg.variedade !== 'Não informada' ? ` (${reg.variedade})` : '';
+
                     texto += `=====================\n`;
                     texto += `📍 *Bloco:* ${reg.bloco}\n`;
-                    texto += `🌱 *Cultura:* ${reg.cultura} (${reg.variedade})\n`;
+                    texto += `🌱 *Cultura:* ${reg.cultura}${showVariedade}\n`;
                     texto += `📦 *Plantado:* ${reg.total.toLocaleString('pt-BR')}\n`;
                     texto += `💀 *Mortas:* ${reg.mortas.toLocaleString('pt-BR')}\n`;
                     texto += `⚠️ *Causa:* ${reg.causa}\n`; 
@@ -687,11 +713,9 @@
                 texto += `=====================\n`;
                 texto += `_📸 Relatório detalhado gerado pelo sistema._`;
 
-                // 2. Converte o canvas para Blob (arquivo real)
                 canvas.toBlob(function(blob) {
                     const arquivo = new File([blob], `Relatorio_Oasis_${Date.now()}.jpg`, { type: 'image/jpeg' });
                     
-                    // 3. Tenta usar o compartilhamento nativo do Celular (envia imagem + texto na mesma mensagem)
                     if (navigator.canShare && navigator.canShare({ files: [arquivo] })) {
                         navigator.share({
                             files: [arquivo],
@@ -699,18 +723,12 @@
                             text: texto
                         }).catch(err => console.log("Compartilhamento cancelado ou falhou", err));
                     } else {
-                        // 4. Fallback para Computador (Baixa a imagem e copia o texto)
-                        // Computadores não suportam injetar imagem no WhatsApp Web via link, então baixamos.
-                        
-                        // Baixar imagem
                         const link = document.createElement('a');
                         link.download = arquivo.name;
                         link.href = canvas.toDataURL('image/jpeg', 0.9);
                         link.click(); 
                         
-                        // Copiar texto para a área de transferência do usuário
                         navigator.clipboard.writeText(texto).then(() => {
-                            // Alerta visual amigável sem usar alert()
                             exibirErro("Imagem baixada e texto copiado! Cole o texto (Ctrl+V) no WhatsApp e anexe a imagem baixada.");
                             document.getElementById('msg-erro').innerText = "Imagem baixada e texto copiado! Cole o texto e anexe a imagem baixada no WhatsApp.";
                             document.getElementById('modal-erro').querySelector('h3').innerText = "Quase lá!";
@@ -719,16 +737,13 @@
                             document.getElementById('modal-erro').querySelector('.bg-red-600').className = "w-full bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 font-bold transition-colors";
                             document.getElementById('modal-erro').querySelector('.bg-blue-600').innerText = "Abrir WhatsApp Web";
                             
-                            // Modifica o botão do modal temporariamente para abrir o whatsapp ao clicar
                             const btnOriginal = document.getElementById('modal-erro').querySelector('button').onclick;
                             document.getElementById('modal-erro').querySelector('button').onclick = function() {
                                 fecharModal('modal-erro');
                                 window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank');
-                                // Restaura o modal de erro original após 1 seg
                                 setTimeout(() => window.location.reload(), 1000); 
                             };
                         }).catch(() => {
-                            // Se falhar o clipboard, apenas abre o link
                             window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank');
                         });
                     }
