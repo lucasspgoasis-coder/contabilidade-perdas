@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Perdas - Fazenda Oásis</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <style>
@@ -74,12 +73,12 @@
             </div>
             
             <div class="mt-4 md:mt-0 flex gap-6 bg-green-50 px-5 py-2 rounded-xl border border-green-100 shadow-inner">
-                <div class="flex flex-col text-center">
+                <div class="flex flex-col text-center justify-center items-center">
                     <span class="text-[10px] font-bold text-green-800 uppercase tracking-wider">Data</span>
                     <span id="data-atual" class="font-semibold text-gray-700 text-sm">--/--/----</span>
                 </div>
                 <div class="w-px bg-green-200"></div>
-                <div class="flex flex-col text-center">
+                <div class="flex flex-col text-center justify-center items-center">
                     <span class="text-[10px] font-bold text-green-800 uppercase tracking-wider">Semana</span>
                     <span id="semana-atual" class="font-semibold text-gray-700 text-sm">--</span>
                 </div>
@@ -90,7 +89,8 @@
     <main class="flex-1 w-full p-4 sm:px-6 lg:px-8 py-6">
         <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 h-full">
             
-            <div class="xl:col-span-4 flex flex-col h-full bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <!-- Painel Esquerdo: Cadastro / Edição de Registro -->
+            <div class="xl:col-span-5 flex flex-col h-full bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
                 <div class="bg-green-700 text-white py-3 px-6">
                     <h3 class="text-md font-bold flex items-center gap-2">
                         <svg class="w-5 h-5 text-green-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
@@ -101,6 +101,7 @@
                 <form id="registro-form" class="p-6 space-y-4 flex-1 overflow-y-auto no-scrollbar">
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Campo Bloco -->
                         <div>
                             <label for="bloco" class="block text-xs font-bold text-gray-600 uppercase mb-1">Bloco <span class="text-red-500">*</span></label>
                             <div class="input-icon-wrapper">
@@ -123,6 +124,7 @@
                             <input type="text" id="bloco-outro" placeholder="Especifique..." class="hidden mt-2 w-full px-4 py-2 bg-gray-50 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:outline-none text-sm">
                         </div>
 
+                        <!-- Campo Cultura -->
                         <div>
                             <label for="cultura" class="block text-xs font-bold text-gray-600 uppercase mb-1">Cultura <span class="text-red-500">*</span></label>
                             <div class="input-icon-wrapper">
@@ -134,10 +136,41 @@
                                     <option value="Outro">Outro...</option>
                                 </select>
                             </div>
-                            <input type="text" id="cultura-outro" placeholder="Qual?" class="hidden mt-2 w-full px-4 py-2 bg-gray-50 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:outline-none text-sm">
+                            <input type="text" id="cultura-outro" placeholder="Qual cultura?" class="hidden mt-2 w-full px-4 py-2 bg-gray-50 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:outline-none text-sm">
                         </div>
                     </div>
 
+                    <!-- Campos Canteiros e Área -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <!-- Campo Canteiro -->
+                        <div>
+                            <label for="canteiros" class="block text-xs font-bold text-gray-600 uppercase mb-1">Canteiros <span class="text-red-500">*</span></label>
+                            <div class="input-icon-wrapper">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                                <input type="number" id="canteiros" min="0" placeholder="Qtd" class="input-with-icon font-semibold text-sm">
+                            </div>
+                        </div>
+
+                        <!-- Campo Metros Quadrados -->
+                        <div>
+                            <label for="metros-quadrados" class="block text-xs font-bold text-gray-600 uppercase mb-1">Área (m²)</label>
+                            <div class="input-icon-wrapper">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                                <input type="number" id="metros-quadrados" min="0" step="any" oninput="calcularArea('m2')" placeholder="Ex: 500" class="input-with-icon font-semibold text-sm">
+                            </div>
+                        </div>
+
+                        <!-- Campo Hectares -->
+                        <div>
+                            <label for="hectares" class="block text-xs font-bold text-gray-600 uppercase mb-1">Área (ha)</label>
+                            <div class="input-icon-wrapper">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                                <input type="number" id="hectares" min="0" step="any" oninput="calcularArea('ha')" placeholder="Ex: 0.05" class="input-with-icon font-semibold text-sm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campo Variedade -->
                     <div>
                         <label for="variedade" class="block text-xs font-bold text-gray-600 uppercase mb-1">
                             Variedade <span class="text-[10px] text-gray-400 font-normal normal-case ml-1">(Opcional)</span>
@@ -145,7 +178,6 @@
                         <div class="input-icon-wrapper">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
                             <select id="variedade" name="variedade" onchange="toggleOutros('variedade', 'variedade-outro')" class="input-with-icon font-semibold text-sm">
-                                <!-- Opção padrão não é disabled, permitindo voltar para "vazio" -->
                                 <option value="" selected>Não informar</option>
                                 <option value="Sygenta BRO 68">Sygenta BRO 68</option>
                                 <option value="TSV MAster">TSV MAster</option>
@@ -153,17 +185,28 @@
                                 <option value="Outro">Outro...</option>
                             </select>
                         </div>
-                        <input type="text" id="variedade-outro" placeholder="Qual?" class="hidden mt-2 w-full px-4 py-2 bg-gray-50 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:outline-none text-sm">
+                        <input type="text" id="variedade-outro" placeholder="Especifique a variedade..." class="hidden mt-2 w-full px-4 py-2 bg-gray-50 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:outline-none text-sm">
                     </div>
 
+                    <!-- Campo Causa -->
                     <div>
-                        <label for="causa" class="block text-xs font-bold text-red-600 uppercase mb-1">Causa das Perdas</label>
+                        <label for="causa" class="block text-xs font-bold text-red-600 uppercase mb-1">Causa das Perdas <span class="text-red-500">*</span></label>
                         <div class="input-icon-wrapper">
                             <svg fill="none" stroke="currentColor" class="text-red-400" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                            <input type="text" id="causa" placeholder="Ex: Chuva forte, Pragas, Seca..." class="input-with-icon font-semibold text-sm border-red-200 focus:border-red-500">
+                            <select id="causa" name="causa" onchange="toggleOutros('causa', 'causa-outro')" class="input-with-icon font-semibold text-sm border-red-200 focus:border-red-500">
+                                <option value="" disabled selected>Selecionar causa...</option>
+                                <option value="Esquiara">Esquiara</option>
+                                <option value="Fungo">Fungo</option>
+                                <option value="Traça">Traça</option>
+                                <option value="Pulgão">Pulgão</option>
+                                <option value="Falta de água">Falta de água</option>
+                                <option value="Outro">Outros (digitar)...</option>
+                            </select>
                         </div>
+                        <input type="text" id="causa-outro" placeholder="Especifique outro motivo..." class="hidden mt-2 w-full px-4 py-2 bg-gray-50 border-2 border-red-200 rounded-lg focus:border-red-500 focus:outline-none text-sm">
                     </div>
 
+                    <!-- Quantidades de Plantio e Mortalidade -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label for="total-transplantado" class="block text-xs font-bold text-gray-600 uppercase mb-1">Qtd. Transplantada <span class="text-red-500">*</span></label>
@@ -182,48 +225,50 @@
                         </div>
                     </div>
 
+                    <!-- Métricas instantâneas em cards de destaque -->
                     <div class="mt-2 bg-gray-50 border-2 border-gray-100 rounded-xl p-3 shadow-sm">
                         <div class="grid grid-cols-2 gap-3">
                             <div class="bg-white p-2 rounded-lg border-2 border-red-100 flex flex-col justify-center items-center text-center">
-                                <span class="text-[10px] font-bold text-red-500 uppercase tracking-wide">Perda</span>
-                                <span id="porcentagem-perda" class="text-lg font-black text-red-600 mt-1">0.00%</span>
+                                <span class="text-[10px] font-bold text-red-500 uppercase tracking-wide">Perda (Arredondada)</span>
+                                <span id="porcentagem-perda" class="text-xl font-black text-red-600 mt-1">0%</span>
                             </div>
                             
                             <div class="bg-white p-2 rounded-lg border-2 border-green-200 flex flex-col justify-center items-center text-center">
                                 <span class="text-[10px] font-bold text-green-600 uppercase tracking-wide">Sobreviventes</span>
-                                <span id="plantas-campo" class="text-lg font-black text-green-700 mt-1">0</span>
+                                <span id="plantas-campo" class="text-xl font-black text-green-700 mt-1">0</span>
                             </div>
                         </div>
                     </div>
                 </form>
 
+                <!-- Botões de Ação do formulário -->
                 <div class="p-4 bg-gray-50 border-t border-gray-200 flex gap-2">
-                    <button type="button" onclick="cancelarEdicao()" class="w-1/3 bg-white border-2 border-gray-300 hover:bg-gray-100 text-gray-700 font-bold py-2.5 px-3 rounded-xl transition duration-200 text-sm">
-                        Limpar / Cancelar
+                    <button type="button" onclick="cancelarEdicao()" class="w-1/3 bg-white border-2 border-gray-300 hover:bg-gray-100 text-gray-700 font-bold py-2.5 px-3 rounded-xl transition duration-200 text-xs sm:text-sm flex items-center justify-center">
+                        Limpar
                     </button>
-                    <button type="button" onclick="salvarRegistro()" class="w-2/3 bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-3 rounded-xl transition duration-200 shadow-md flex justify-center items-center gap-2 text-sm">
+                    <button type="button" onclick="salvarRegistro()" class="w-2/3 bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-3 rounded-xl transition duration-200 shadow-md flex justify-center items-center gap-2 text-xs sm:text-sm">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
                         <span id="btn-salvar-texto">Salvar Lote</span>
                     </button>
                 </div>
             </div>
 
-            <div class="xl:col-span-8 flex flex-col h-full bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden relative">
+            <div class="xl:col-span-7 flex flex-col h-full bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden relative">
                 
                 <div class="bg-gray-800 text-white py-3 px-6 flex flex-col sm:flex-row justify-between items-center z-10 gap-3 border-b border-gray-700">
-                    <h3 class="text-md font-bold flex items-center gap-2 w-full sm:w-auto">
+                    <h3 class="text-md font-bold flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start">
                         <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                        Histórico
+                        Histórico de Registros
                     </h3>
                     
                     <div class="flex gap-2 w-full sm:w-auto">
-                        <button onclick="baixarRelatorio('pdf')" class="flex-1 sm:flex-none flex justify-center items-center gap-1.5 bg-gray-700 hover:bg-gray-600 border border-gray-600 text-white text-xs font-bold py-2 px-3 rounded-lg transition-colors">
+                        <button onclick="baixarRelatorioPDF()" class="flex-1 sm:flex-none flex justify-center items-center gap-1.5 bg-gray-700 hover:bg-gray-600 border border-gray-600 text-xs font-bold py-2 px-3 rounded-lg transition-colors">
                             <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                             Baixar PDF
                         </button>
                         <button onclick="enviarWhatsApp()" class="flex-1 sm:flex-none flex justify-center items-center gap-1.5 bg-[#25D366] hover:bg-[#1DA851] text-white text-xs font-bold py-2 px-3 rounded-lg transition-colors shadow-sm">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564c.173.087.289.129.332.202.043.073.043.423-.101.827z"></path></svg>
-                            Baixar Imagem + WhatsApp
+                            Exportar p/ WhatsApp
                         </button>
                     </div>
                 </div>
@@ -232,17 +277,18 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50 border-b border-gray-200">
                             <tr>
-                                <th scope="col" class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider">Bloco</th>
-                                <th scope="col" class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider">Cult./Var.</th>
-                                <th scope="col" class="px-4 py-3 text-left text-[10px] font-bold text-gray-500 uppercase tracking-wider">Causa</th>
+                                <th scope="col" class="px-4 py-3 text-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">Lote / Local</th>
+                                <th scope="col" class="px-4 py-3 text-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">Cultura / Var.</th>
+                                <th scope="col" class="px-4 py-3 text-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">Área</th>
+                                <th scope="col" class="px-4 py-3 text-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">Causa</th>
                                 <th scope="col" class="px-4 py-3 text-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">Mortalidade</th>
-                                <th scope="col" class="px-4 py-3 text-right text-[10px] font-bold text-gray-500 uppercase tracking-wider">Perda %</th>
+                                <th scope="col" class="px-4 py-3 text-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">Perda %</th>
                                 <th scope="col" class="px-4 py-3 text-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">Ações</th>
                             </tr>
                         </thead>
-                        <tbody id="historico-tabela" class="bg-white divide-y divide-gray-100">
+                        <tbody id="historico-tabela" class="bg-white divide-y divide-gray-100 text-center">
                             <tr id="empty-state">
-                                <td colspan="6" class="px-6 py-20 text-center text-gray-400">
+                                <td colspan="7" class="px-6 py-20 text-center text-gray-400">
                                     <svg class="mx-auto h-12 w-12 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
@@ -256,39 +302,10 @@
         </div>
     </main>
 
-    <div id="export-layout-container" class="fixed top-0 left-[-9999px] w-[650px] bg-white text-gray-800 font-sans z-[-1] pointer-events-none">
-        <div class="relative w-full p-8 bg-white" id="export-capture-area">
-            
-            <div class="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none z-0">
-                <img src="https://i.imgur.com/wEozr34.png" alt="Marca" class="w-3/4 grayscale">
-            </div>
+    <!-- Canvas Oculto para renderização de imagem de alta definição -->
+    <canvas id="export-canvas" class="hidden"></canvas>
 
-            <div class="relative z-10 text-center border-b-4 border-green-700 pb-6 mb-8">
-                <img src="https://i.imgur.com/wEozr34.png" alt="Logo" class="h-24 mx-auto mb-4 object-contain">
-                <h1 class="text-3xl font-black text-green-900 uppercase tracking-widest">Relatório de Perdas</h1>
-                <h2 class="text-lg font-bold text-gray-500 mt-1 uppercase">Fazenda Oásis</h2>
-                
-                <div class="flex justify-center items-center gap-4 mt-6">
-                    <div class="bg-gray-100 px-4 py-2 rounded-lg text-center">
-                        <span class="block text-xs font-bold text-gray-500 uppercase">Data do Relatório</span>
-                        <span class="text-lg font-black text-gray-800" id="export-data"></span>
-                    </div>
-                    <div class="bg-gray-100 px-4 py-2 rounded-lg text-center">
-                        <span class="block text-xs font-bold text-gray-500 uppercase">Semana</span>
-                        <span class="text-lg font-black text-gray-800" id="export-semana"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div id="export-cards-container" class="relative z-10 flex flex-col gap-6 w-full">
-            </div>
-
-            <div class="relative z-10 mt-8 pt-4 border-t border-gray-300 text-center">
-                <p class="text-xs font-bold text-gray-400">Documento gerado automaticamente pelo Sistema de Controle - Fazenda Oásis</p>
-            </div>
-        </div>
-    </div>
-
+    <!-- Modal de Sucesso -->
     <div id="modal-sucesso" class="fixed inset-0 bg-gray-900 bg-opacity-60 hidden flex items-center justify-center z-50 backdrop-blur-sm">
         <div class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-sm w-full mx-4">
             <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -300,17 +317,19 @@
         </div>
     </div>
 
+    <!-- Modal de Mensagem / Alerta -->
     <div id="modal-erro" class="fixed inset-0 bg-gray-900 bg-opacity-60 hidden flex items-center justify-center z-50 backdrop-blur-sm">
         <div class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-sm w-full mx-4">
-            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            <div id="modal-erro-icone-container" class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg id="modal-erro-icone" class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
             </div>
-            <h3 class="text-xl font-extrabold text-gray-900 mb-2">Atenção</h3>
-            <p id="msg-erro" class="text-sm text-gray-600 mb-6">Preencha os campos.</p>
-            <button onclick="fecharModal('modal-erro')" class="w-full bg-red-600 text-white px-6 py-3 rounded-xl hover:bg-red-700 font-bold transition-colors">Corrigir</button>
+            <h3 id="modal-erro-titulo" class="text-xl font-extrabold text-gray-900 mb-2">Atenção</h3>
+            <p id="msg-erro" class="text-sm text-gray-600 mb-6 font-medium whitespace-pre-line">Preencha os campos obrigatórios.</p>
+            <button id="modal-erro-btn" onclick="fecharModal('modal-erro')" class="w-full bg-red-600 text-white px-6 py-3 rounded-xl hover:bg-red-700 font-bold transition-colors">Entendido</button>
         </div>
     </div>
 
+    <!-- Modal de Confirmação de Exclusão -->
     <div id="modal-confirmacao" class="fixed inset-0 bg-gray-900 bg-opacity-60 hidden flex items-center justify-center z-50 backdrop-blur-sm">
         <div class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-sm w-full mx-4">
             <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -338,11 +357,9 @@
             const hoje = new Date();
             const dataFormatada = hoje.toLocaleDateString('pt-BR');
             document.getElementById('data-atual').innerText = dataFormatada;
-            document.getElementById('export-data').innerText = dataFormatada;
 
             const numeroSemana = obterNumeroDaSemana(hoje);
             document.getElementById('semana-atual').innerText = numeroSemana;
-            document.getElementById('export-semana').innerText = numeroSemana;
         }
 
         function obterNumeroDaSemana(d) {
@@ -350,6 +367,28 @@
             d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
             const inicioDoAno = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
             return Math.ceil((((d - inicioDoAno) / 86400000) + 1) / 7);
+        }
+
+        // Calcula área automaticamente em m2 ou hectares
+        function calcularArea(tipoAlterado) {
+            const inputM2 = document.getElementById('metros-quadrados');
+            const inputHa = document.getElementById('hectares');
+            
+            if (tipoAlterado === 'm2') {
+                const m2 = parseFloat(inputM2.value) || 0;
+                if (m2 > 0) {
+                    inputHa.value = (m2 / 10000).toFixed(4);
+                } else {
+                    inputHa.value = '';
+                }
+            } else if (tipoAlterado === 'ha') {
+                const ha = parseFloat(inputHa.value) || 0;
+                if (ha > 0) {
+                    inputM2.value = Math.round(ha * 10000);
+                } else {
+                    inputM2.value = '';
+                }
+            }
         }
 
         function toggleOutros(selectId, inputId) {
@@ -368,7 +407,7 @@
         function obterValorReal(idSelect, idInput) {
             const select = document.getElementById(idSelect).value;
             if (select === 'Outro') {
-                return document.getElementById(idInput).value || 'Não especificado';
+                return document.getElementById(idInput).value.trim() || 'Outro';
             }
             return select || '-';
         }
@@ -385,23 +424,29 @@
 
             if (total > 0) {
                 plantasEmCampo = total - mortas;
-                if(plantasEmCampo < 0) plantasEmCampo = 0; 
+                if (plantasEmCampo < 0) plantasEmCampo = 0; 
                 
                 porcentagemPerda = (mortas / total) * 100;
-                if(porcentagemPerda > 100) porcentagemPerda = 100;
+                if (porcentagemPerda > 100) porcentagemPerda = 100;
             }
 
             document.getElementById('plantas-campo').innerText = plantasEmCampo.toLocaleString('pt-BR');
-            document.getElementById('porcentagem-perda').innerText = porcentagemPerda.toFixed(2) + '%';
+            document.getElementById('porcentagem-perda').innerText = Math.round(porcentagemPerda) + '%';
         }
 
         function exibirErro(mensagem) {
+            document.getElementById('modal-erro-icone-container').className = "w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4";
+            document.getElementById('modal-erro-icone').outerHTML = `<svg id="modal-erro-icone" class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`;
+            document.getElementById('modal-erro-titulo').innerText = "Atenção";
+            document.getElementById('modal-erro-btn').className = "w-full bg-red-600 text-white px-6 py-3 rounded-xl hover:bg-red-700 font-bold transition-colors";
+            document.getElementById('modal-erro-btn').innerText = "Corrigir";
+            document.getElementById('modal-erro-btn').onclick = function() { fecharModal('modal-erro'); };
+
             document.getElementById('msg-erro').innerText = mensagem;
             document.getElementById('modal-erro').classList.remove('hidden');
         }
 
         function salvarRegistro() {
-            // Trava de segurança para campos obrigatórios
             const blocoSelect = document.getElementById('bloco').value;
             if (!blocoSelect) {
                 exibirErro("Por favor, selecione um Bloco (Campo obrigatório).");
@@ -414,39 +459,53 @@
                 return;
             }
 
+            const canteirosInput = document.getElementById('canteiros').value;
+            if (!canteirosInput || parseInt(canteirosInput) < 0) {
+                exibirErro("Por favor, informe a quantidade de Canteiros.");
+                return;
+            }
+
+            const causaSelect = document.getElementById('causa').value;
+            if (!causaSelect) {
+                exibirErro("Por favor, informe a Causa das Perdas.");
+                return;
+            }
+
             const totalInput = document.getElementById('total-transplantado').value;
             const total = parseFloat(totalInput) || 0;
-            
-            if(total <= 0) {
+            if (total <= 0) {
                 exibirErro("Você precisa informar uma quantidade válida no 'Total Transplantado'.");
                 return;
             }
 
             const bloco = obterValorReal('bloco', 'bloco-outro');
             const cultura = obterValorReal('cultura', 'cultura-outro');
+            const causa = obterValorReal('causa', 'causa-outro');
+            const canteiros = parseInt(canteirosInput);
             
-            // Tratamento específico e elegante para a Variedade (Opcional)
+            const m2Val = parseFloat(document.getElementById('metros-quadrados').value) || 0;
+            const haVal = parseFloat(document.getElementById('hectares').value) || 0;
+
             let variedade = document.getElementById('variedade').value;
             if (variedade === 'Outro') {
-                variedade = document.getElementById('variedade-outro').value || 'Não informada';
+                variedade = document.getElementById('variedade-outro').value.trim() || 'Não informada';
             } else if (!variedade) {
                 variedade = 'Não informada';
             }
-            
-            let causa = document.getElementById('causa').value.trim();
-            if(!causa) causa = "Não informada";
 
             const mortasInput = document.getElementById('mortalidade').value;
             const mortas = parseFloat(mortasInput) || 0;
             
             let sobreviventes = total - mortas;
-            if(sobreviventes < 0) sobreviventes = 0;
-            let perda = ((mortas / total) * 100).toFixed(2);
-            if(perda > 100) perda = 100.00;
+            if (sobreviventes < 0) sobreviventes = 0;
+            
+            let perda = Math.round((mortas / total) * 100);
+            if (perda > 100) perda = 100;
 
             const registro = {
                 id: idEdicaoAtual !== null ? idEdicaoAtual : Date.now(),
-                bloco, cultura, variedade, causa, total, mortas, sobreviventes, perda
+                bloco, cultura, variedade, causa, total, mortas, sobreviventes, perda,
+                canteiros, m2: m2Val, ha: haVal
             };
 
             if (idEdicaoAtual !== null) {
@@ -480,15 +539,18 @@
 
         function editarRegistro(id) {
             const reg = registrosHistorico.find(r => r.id === id);
-            if(!reg) return;
+            if (!reg) return;
 
             document.getElementById('total-transplantado').value = reg.total;
             document.getElementById('mortalidade').value = reg.mortas;
-            document.getElementById('causa').value = reg.causa === 'Não informada' ? '' : reg.causa;
+            document.getElementById('canteiros').value = reg.canteiros;
+            document.getElementById('metros-quadrados').value = reg.m2 > 0 ? reg.m2 : '';
+            document.getElementById('hectares').value = reg.ha > 0 ? reg.ha : '';
 
             selecionarOuOutro('bloco', 'bloco-outro', reg.bloco);
             selecionarOuOutro('cultura', 'cultura-outro', reg.cultura);
             selecionarOuOutro('variedade', 'variedade-outro', reg.variedade);
+            selecionarOuOutro('causa', 'causa-outro', reg.causa);
 
             calcularPerdas();
             
@@ -512,7 +574,6 @@
                 input.classList.add('hidden');
                 input.value = '';
             } else if (valor === 'Não informada' || valor === '') {
-                // Seleciona a opção base de ignorar quando for o campo Variedade
                 select.value = '';
                 input.classList.add('hidden');
                 input.value = '';
@@ -533,10 +594,10 @@
             const tbody = document.getElementById('historico-tabela');
             tbody.innerHTML = ''; 
             
-            if(registrosHistorico.length === 0) {
+            if (registrosHistorico.length === 0) {
                 tbody.innerHTML = `
                     <tr id="empty-state">
-                        <td colspan="6" class="px-6 py-20 text-center text-gray-400">
+                        <td colspan="7" class="px-6 py-20 text-center text-gray-400">
                             <p class="text-sm">Nenhum lote registrado.</p>
                         </td>
                     </tr>
@@ -546,36 +607,45 @@
 
             registrosHistorico.forEach(reg => {
                 let badgeClass = 'bg-gray-100 text-gray-800';
-                if(reg.perda > 15) badgeClass = 'bg-red-100 text-red-800';
-                else if(reg.perda > 5) badgeClass = 'bg-yellow-100 text-yellow-800';
-                else if(reg.perda > 0) badgeClass = 'bg-green-100 text-green-800';
+                if (reg.perda > 15) badgeClass = 'bg-red-100 text-red-800';
+                else if (reg.perda > 5) badgeClass = 'bg-yellow-100 text-yellow-800';
+                else if (reg.perda > 0) badgeClass = 'bg-green-100 text-green-800';
 
-                // Se não há variedade, deixa sutil o texto na tabela
                 const infoVariedade = reg.variedade !== 'Não informada' 
-                    ? `<div class="text-[10px] text-gray-500">${reg.variedade}</div>` 
-                    : `<div class="text-[10px] text-gray-400 italic">Sem variedade</div>`;
+                    ? `<div class="text-[10px] text-gray-500 font-medium">${reg.variedade}</div>` 
+                    : `<div class="text-[10px] text-gray-400 italic">Sem var.</div>`;
+
+                const areaDisplay = reg.m2 > 0 
+                    ? `<div class="text-xs text-gray-800 font-medium">${reg.m2} m²</div><div class="text-[9px] text-gray-400">${reg.ha} ha</div>` 
+                    : `<div class="text-[10px] text-gray-400 italic">-</div>`;
 
                 const tr = document.createElement('tr');
-                tr.className = 'hover:bg-green-50 transition-colors duration-150';
+                tr.className = 'hover:bg-green-50 transition-colors duration-150 align-middle';
                 tr.innerHTML = `
-                    <td class="px-4 py-3 whitespace-nowrap text-xs font-bold text-gray-900">${reg.bloco}</td>
-                    <td class="px-4 py-3 whitespace-nowrap">
+                    <td class="px-4 py-3 whitespace-nowrap text-xs font-bold text-gray-900 vertical-align-middle">
+                        <span class="block">Bloco ${reg.bloco}</span>
+                        <span class="text-[10px] text-green-700 font-semibold bg-green-50 px-1.5 py-0.5 rounded">${reg.canteiros} Cant.</span>
+                    </td>
+                    <td class="px-4 py-3 whitespace-nowrap vertical-align-middle">
                         <div class="text-xs font-bold text-gray-900">${reg.cultura}</div>
                         ${infoVariedade}
                     </td>
-                    <td class="px-4 py-3 text-xs text-gray-700 italic max-w-[150px] truncate" title="${reg.causa}">
+                    <td class="px-4 py-3 whitespace-nowrap vertical-align-middle">
+                        ${areaDisplay}
+                    </td>
+                    <td class="px-4 py-3 text-xs text-gray-700 font-semibold max-w-[120px] truncate vertical-align-middle" title="${reg.causa}">
                         ${reg.causa}
                     </td>
-                    <td class="px-4 py-3 whitespace-nowrap text-center">
+                    <td class="px-4 py-3 whitespace-nowrap vertical-align-middle">
                         <span class="text-xs font-bold text-red-600 block">${reg.mortas.toLocaleString('pt-BR')} mortas</span>
                         <span class="text-[10px] text-gray-500 block">de ${reg.total.toLocaleString('pt-BR')}</span>
                     </td>
-                    <td class="px-4 py-3 whitespace-nowrap text-right">
-                        <span class="px-2 py-1 inline-flex text-[10px] leading-4 font-black rounded-full ${badgeClass}">
+                    <td class="px-4 py-3 whitespace-nowrap vertical-align-middle">
+                        <span class="px-2.5 py-1 inline-flex text-xs leading-4 font-black rounded-full ${badgeClass}">
                             ${reg.perda}%
                         </span>
                     </td>
-                    <td class="px-4 py-3 whitespace-nowrap text-center">
+                    <td class="px-4 py-3 whitespace-nowrap vertical-align-middle">
                         <div class="flex items-center justify-center gap-2">
                             <button onclick="editarRegistro(${reg.id})" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 p-1.5 rounded-lg transition-colors" title="Editar">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
@@ -592,7 +662,7 @@
 
         function fecharModal(idModal) {
             document.getElementById(idModal).classList.add('hidden');
-            if(idModal === 'modal-sucesso') {
+            if (idModal === 'modal-sucesso') {
                 limparFormulario();
             }
         }
@@ -602,117 +672,269 @@
             document.getElementById('bloco-outro').classList.add('hidden');
             document.getElementById('cultura-outro').classList.add('hidden');
             document.getElementById('variedade-outro').classList.add('hidden');
+            document.getElementById('causa-outro').classList.add('hidden');
             calcularPerdas();
         }
 
-        function construirLayoutExportacao() {
-            const container = document.getElementById('export-cards-container');
-            container.innerHTML = ''; 
-
-            registrosHistorico.forEach((reg) => {
-                const exibeVariedade = reg.variedade !== 'Não informada' ? reg.variedade : 'Não informada';
-
-                const cardHtml = `
-                    <div class="bg-gray-50 border-2 border-gray-200 rounded-2xl p-6 text-center shadow-sm w-full mx-auto">
-                        <h3 class="text-xl font-black text-green-800 uppercase border-b-2 border-gray-200 pb-3 mb-4">
-                            Bloco ${reg.bloco} - ${reg.cultura}
-                        </h3>
-                        
-                        <p class="text-sm text-gray-500 font-bold mb-4">Variedade: <span class="text-gray-800">${exibeVariedade}</span></p>
-
-                        <div class="flex justify-center gap-6 mb-5">
-                            <div class="text-center bg-white px-4 py-2 border border-gray-200 rounded-xl w-32">
-                                <span class="block text-[10px] font-bold text-gray-400 uppercase">Plantado</span>
-                                <span class="block text-lg font-black text-gray-700">${reg.total.toLocaleString('pt-BR')}</span>
-                            </div>
-                            
-                            <div class="text-center bg-red-50 px-4 py-2 border border-red-200 rounded-xl w-32">
-                                <span class="block text-[10px] font-bold text-red-400 uppercase">Mortas</span>
-                                <span class="block text-lg font-black text-red-600">${reg.mortas.toLocaleString('pt-BR')}</span>
-                            </div>
-                            
-                            <div class="text-center bg-green-50 px-4 py-2 border border-green-200 rounded-xl w-32">
-                                <span class="block text-[10px] font-bold text-green-500 uppercase">Sobreviveu</span>
-                                <span class="block text-lg font-black text-green-700">${reg.sobreviventes.toLocaleString('pt-BR')}</span>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-col items-center justify-center bg-yellow-50 border border-yellow-200 p-3 rounded-xl mx-auto w-4/5">
-                            <span class="text-xs font-bold text-yellow-600 uppercase mb-1">Motivo / Causa da Perda:</span>
-                            <span class="text-base font-bold text-gray-800 text-center">${reg.causa}</span>
-                        </div>
-                        
-                        <div class="mt-4 pt-3 border-t border-gray-200">
-                            <p class="text-sm font-bold text-gray-500 uppercase">
-                                Taxa de Perda Total: <span class="text-red-600 text-xl ml-2 font-black">${reg.perda}%</span>
-                            </p>
-                        </div>
-                    </div>
-                `;
-                container.innerHTML += cardHtml;
-            });
-        }
-
-        function capturarImagem(callback) {
-            construirLayoutExportacao();
+        /**
+         * RENDERIZADOR NATIVO EM CANVAS HTML5
+         * Desenha de forma nítida o documento oficial contendo os registros de perdas.
+         * Agora o logotipo da Fazenda Oásis é integrado ao cabeçalho de forma nativa e segura.
+         */
+        function gerarImagemRelatorio(callback) {
+            const canvas = document.getElementById('export-canvas');
+            const ctx = canvas.getContext('2d');
             
-            const area = document.getElementById('export-capture-area');
+            // Pré-carregamento do Logo com tratamento CORS
+            const logoImg = new Image();
+            logoImg.crossOrigin = "anonymous";
+            logoImg.src = "https://i.imgur.com/wEozr34.png";
             
-            html2canvas(area, { 
-                scale: 1.5, 
-                useCORS: true,
-                backgroundColor: "#ffffff",
-                windowWidth: 650 
-            }).then(canvas => {
+            // Função interna que executa o desenho após o carregamento da imagem (ou falha)
+            const desenharCanvas = (imgCarregada) => {
+                const dpr = 2; // Qualidade Retina
+                const width = 750;
+                const headerHeight = 260; // Aumentado para acomodar título centralizado
+                const rowHeight = 150;
+                const footerHeight = 80;
+                const totalHeight = headerHeight + (registrosHistorico.length * rowHeight) + footerHeight;
+                
+                canvas.width = width * dpr;
+                canvas.height = totalHeight * dpr;
+                canvas.style.width = width + 'px';
+                canvas.style.height = totalHeight + 'px';
+                
+                ctx.scale(dpr, dpr);
+                
+                // Fundo Geral do documento
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, width, totalHeight);
+                
+                // 1. Cabeçalho Verde Oásis
+                ctx.fillStyle = '#047857';
+                ctx.fillRect(0, 0, width, headerHeight - 25);
+                
+                // Faixa amarela de destaque
+                ctx.fillStyle = '#FBBF24';
+                ctx.fillRect(0, headerHeight - 25, width, 5);
+
+                const centerX = width / 2;
+
+                // Desenho do Logotipo da Fazenda Oásis (Sem fundo/contorno e centralizado)
+                if (imgCarregada) {
+                    ctx.drawImage(imgCarregada, centerX - 40, 20, 80, 80);
+                } else {
+                    // Fallback visual caso o logo não carregue
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.font = 'bold 32px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('🌴', centerX, 60);
+                }
+
+                // Títulos do Cabeçalho centralizados
+                ctx.fillStyle = '#FFFFFF';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                ctx.font = 'bold 28px sans-serif';
+                ctx.fillText('FAZENDA OÁSIS', centerX, 125);
+                
+                ctx.font = '800 14px sans-serif';
+                ctx.fillStyle = '#E6F4EA';
+                ctx.fillText('RELATÓRIO SEMANAL DE PERDAS DE PLANTIO', centerX, 155);
+                
+                // Box de dados gerais do cabeçalho
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+                ctx.roundRect = ctx.roundRect || function (x, y, w, h, r) {
+                    if (typeof r === 'number') r = {tl: r, tr: r, br: r, bl: r};
+                    ctx.beginPath();
+                    ctx.moveTo(x + r.tl, y);
+                    ctx.lineTo(x + w - r.tr, y);
+                    ctx.quadraticCurveTo(x + w, y, x + w, y + r.tr);
+                    ctx.lineTo(x + w, y + h - r.br);
+                    ctx.quadraticCurveTo(x + w, y + h, x + w - r.br, y + h);
+                    ctx.lineTo(x + r.bl, y + h);
+                    ctx.quadraticCurveTo(x, y + h, x, y + h - r.bl);
+                    ctx.lineTo(x, y + r.tl);
+                    ctx.quadraticCurveTo(x, y, x + r.tl, y);
+                    ctx.closePath();
+                };
+                
+                ctx.beginPath();
+                ctx.roundRect(centerX - 230, 185, 460, 40, 10);
+                ctx.fill();
+                
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = 'bold 12px sans-serif';
+                const dataHoje = document.getElementById('data-atual').innerText;
+                const semanaHoje = document.getElementById('semana-atual').innerText;
+                ctx.fillText(`DATA: ${dataHoje}   |   SEMANA OPERACIONAL: ${semanaHoje}`, centerX, 205);
+
+                // 2. Renderização do Histórico de Lotes
+                let currentY = headerHeight;
+                
+                registrosHistorico.forEach((reg, index) => {
+                    if (index > 0) {
+                        ctx.strokeStyle = '#E5E7EB';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(30, currentY);
+                        ctx.lineTo(width - 30, currentY);
+                        ctx.stroke();
+                    }
+                    
+                    if (index % 2 === 0) {
+                        ctx.fillStyle = '#F9FAFB';
+                        ctx.fillRect(30, currentY + 10, width - 60, rowHeight - 20);
+                    }
+
+                    // Bloco e Canteiros (Esquerda)
+                    ctx.textAlign = 'left';
+                    ctx.textBaseline = 'middle';
+                    
+                    ctx.fillStyle = '#111827';
+                    ctx.font = 'bold 18px sans-serif';
+                    ctx.fillText(`Bloco ${reg.bloco}`, 50, currentY + 45);
+                    
+                    ctx.fillStyle = '#047857';
+                    ctx.font = 'bold 12px sans-serif';
+                    ctx.fillText(`${reg.canteiros} Canteiros`, 50, currentY + 70);
+                    
+                    if (reg.m2 > 0) {
+                        ctx.fillStyle = '#6B7280';
+                        ctx.font = 'medium 11px sans-serif';
+                        ctx.fillText(`${reg.m2} m² (${reg.ha} ha)`, 50, currentY + 95);
+                    } else {
+                        ctx.fillStyle = '#9CA3AF';
+                        ctx.font = 'italic 11px sans-serif';
+                        ctx.fillText('Área não informada', 50, currentY + 95);
+                    }
+
+                    // Cultura, Variedade e Causa (Centro-Esquerda)
+                    ctx.fillStyle = '#1F2937';
+                    ctx.font = '800 15px sans-serif';
+                    ctx.fillText(reg.cultura, 230, currentY + 45);
+                    
+                    ctx.fillStyle = '#4B5563';
+                    ctx.font = 'normal 12px sans-serif';
+                    ctx.fillText(`Variedade: ${reg.variedade}`, 230, currentY + 70);
+                    
+                    ctx.fillStyle = '#DC2626';
+                    ctx.font = 'bold 12px sans-serif';
+                    ctx.fillText(`Causa: ${reg.causa}`, 230, currentY + 95);
+
+                    // Indicadores de Transplante e Vida (Centro-Direita)
+                    ctx.textAlign = 'center';
+                    ctx.fillStyle = '#374151';
+                    ctx.font = 'bold 12px sans-serif';
+                    ctx.fillText('Transplantado', 480, currentY + 35);
+                    ctx.font = '900 16px sans-serif';
+                    ctx.fillText(reg.total.toLocaleString('pt-BR'), 480, currentY + 58);
+
+                    ctx.font = 'bold 12px sans-serif';
+                    ctx.fillStyle = '#9CA3AF';
+                    ctx.fillText('Sobreviventes', 480, currentY + 85);
+                    ctx.font = '900 15px sans-serif';
+                    ctx.fillStyle = '#047857';
+                    ctx.fillText(reg.sobreviventes.toLocaleString('pt-BR'), 480, currentY + 105);
+
+                    // Taxa de Perda em Círculo Colorido (Direita)
+                    ctx.textAlign = 'right';
+                    ctx.fillStyle = '#9CA3AF';
+                    ctx.font = 'bold 11px sans-serif';
+                    ctx.fillText('TAXA PERDA', width - 60, currentY + 40);
+                    
+                    let badgeColor = '#DEF7EC'; 
+                    let badgeTextColor = '#03543F';
+                    if (reg.perda > 15) {
+                        badgeColor = '#FDE8E8'; 
+                        badgeTextColor = '#9B1C1C';
+                    } else if (reg.perda > 5) {
+                        badgeColor = '#FEF08A'; 
+                        badgeTextColor = '#713F12';
+                    }
+
+                    ctx.fillStyle = badgeColor;
+                    ctx.beginPath();
+                    ctx.arc(width - 100, currentY + 80, 28, 0, 2 * Math.PI);
+                    ctx.fill();
+
+                    ctx.fillStyle = badgeTextColor;
+                    ctx.font = 'black 16px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(`${reg.perda}%`, width - 100, currentY + 85);
+
+                    currentY += rowHeight;
+                });
+
+                // 3. Rodapé Oficial
+                ctx.fillStyle = '#F3F4F6';
+                ctx.fillRect(0, totalHeight - footerHeight, width, footerHeight);
+
+                ctx.fillStyle = '#9CA3AF';
+                ctx.font = 'bold 10px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('DOCUMENTO OFICIAL GERADO PELO SISTEMA INTERNO FAZENDA OÁSIS', width / 2, totalHeight - (footerHeight / 2) - 5);
+                ctx.font = 'normal 9px sans-serif';
+                ctx.fillText('Todos os direitos reservados • Controle Integrado de Lavoura', width / 2, totalHeight - (footerHeight / 2) + 12);
+
                 callback(canvas);
-            });
+            };
+
+            // Eventos de load / error do logotipo com imagem alternativa
+            logoImg.onload = () => desenharCanvas(logoImg);
+            logoImg.onerror = () => desenharCanvas(null);
         }
 
-        function baixarRelatorio(tipo) {
-            if(registrosHistorico.length === 0) {
+        function baixarRelatorioPDF() {
+            if (registrosHistorico.length === 0) {
                 exibirErro("Não há registros para exportar.");
                 return;
             }
 
-            capturarImagem(function(canvas) {
-                if (tipo === 'pdf') {
-                    const { jsPDF } = window.jspdf;
-                    const pdf = new jsPDF('p', 'mm', 'a4');
-                    const imgData = canvas.toDataURL('image/png');
-                    const imgProps = pdf.getImageProperties(imgData);
-                    const pdfWidth = pdf.internal.pageSize.getWidth();
-                    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-                    
-                    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                    pdf.save(`Relatorio_Oasis_${document.getElementById('data-atual').innerText.replace(/\//g, '-')}.pdf`);
-                }
+            gerarImagemRelatorio(function(canvas) {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgData = canvas.toDataURL('image/jpeg', 1.0);
+                
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height / canvas.width) * pdfWidth;
+                
+                pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+                const dataLimpa = document.getElementById('data-atual').innerText.replace(/\//g, '-');
+                pdf.save(`Relatorio_Perdas_Oasis_${dataLimpa}.pdf`);
             });
         }
 
         function enviarWhatsApp() {
-            if(registrosHistorico.length === 0) {
-                exibirErro("Não há registros no histórico para enviar ao WhatsApp.");
+            if (registrosHistorico.length === 0) {
+                exibirErro("Não há registros no histórico para exportar.");
                 return;
             }
 
-            capturarImagem(function(canvas) {
-                let texto = "🚜 *RELATÓRIO DE PERDAS - FAZENDA OÁSIS* 🚜\n";
-                texto += `📅 *Data:* ${document.getElementById('data-atual').innerText} | *Semana:* ${document.getElementById('semana-atual').innerText}\n\n`;
+            gerarImagemRelatorio(function(canvas) {
+                // Estrutura de texto otimizada SEM ícones, mantendo apenas o % de perdas
+                let texto = "*RELATÓRIO DE PERDAS - FAZENDA OÁSIS*\n";
+                texto += `Data: ${document.getElementById('data-atual').innerText} | Semana: ${document.getElementById('semana-atual').innerText}\n\n`;
                 
                 registrosHistorico.forEach((reg) => {
                     const showVariedade = reg.variedade !== 'Não informada' ? ` (${reg.variedade})` : '';
+                    const showArea = reg.m2 > 0 ? `Área: ${reg.m2} m² (${reg.ha} ha)\n` : '';
 
                     texto += `=====================\n`;
-                    texto += `📍 *Bloco:* ${reg.bloco}\n`;
-                    texto += `🌱 *Cultura:* ${reg.cultura}${showVariedade}\n`;
-                    texto += `📦 *Plantado:* ${reg.total.toLocaleString('pt-BR')}\n`;
-                    texto += `💀 *Mortas:* ${reg.mortas.toLocaleString('pt-BR')}\n`;
-                    texto += `⚠️ *Causa:* ${reg.causa}\n`; 
-                    texto += `📉 *Taxa de Perda:* ${reg.perda}%\n`;
+                    texto += `*Bloco:* ${reg.bloco} | *Área do Bloco:* ${reg.canteiros} canteiros\n`;
+                    texto += `*Cultura:* ${reg.cultura}${showVariedade}\n`;
+                    texto += showArea;
+                    texto += `*Plantado:* ${reg.total.toLocaleString('pt-BR')} mudas no solo\n`;
+                    texto += `*Mortalidade:* ${reg.mortas.toLocaleString('pt-BR')} plantas mortas\n`;
+                    texto += `*Causa:* ${reg.causa}\n`; 
+                    texto += `📉 *Taxa de Perda:* ${reg.perda}% (Arredondado)\n`;
                 });
                 texto += `=====================\n`;
-                texto += `_📸 Relatório detalhado gerado pelo sistema._`;
+                texto += `_Relatório consolidado gerado pelo sistema integrado da Fazenda._`;
 
+                // Converte canvas para Blob para possibilitar compartilhamento de mídia nativo se compatível
                 canvas.toBlob(function(blob) {
                     const arquivo = new File([blob], `Relatorio_Oasis_${Date.now()}.jpg`, { type: 'image/jpeg' });
                     
@@ -721,33 +943,41 @@
                             files: [arquivo],
                             title: 'Relatório Fazenda Oásis',
                             text: texto
-                        }).catch(err => console.log("Compartilhamento cancelado ou falhou", err));
+                        }).catch(err => console.log("Compartilhamento cancelado", err));
                     } else {
+                        // Fallback elegante para navegadores/sistemas que não suportam API Share de arquivos direto
                         const link = document.createElement('a');
-                        link.download = arquivo.name;
-                        link.href = canvas.toDataURL('image/jpeg', 0.9);
+                        link.download = `Relatorio_Fazenda_Oasis_${Date.now()}.jpg`;
+                        link.href = canvas.toDataURL('image/jpeg', 0.95);
                         link.click(); 
                         
-                        navigator.clipboard.writeText(texto).then(() => {
-                            exibirErro("Imagem baixada e texto copiado! Cole o texto (Ctrl+V) no WhatsApp e anexe a imagem baixada.");
-                            document.getElementById('msg-erro').innerText = "Imagem baixada e texto copiado! Cole o texto e anexe a imagem baixada no WhatsApp.";
-                            document.getElementById('modal-erro').querySelector('h3').innerText = "Quase lá!";
-                            document.getElementById('modal-erro').querySelector('svg').outerHTML = `<svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
-                            document.getElementById('modal-erro').querySelector('.bg-red-100').className = "w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4";
-                            document.getElementById('modal-erro').querySelector('.bg-red-600').className = "w-full bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 font-bold transition-colors";
-                            document.getElementById('modal-erro').querySelector('.bg-blue-600').innerText = "Abrir WhatsApp Web";
-                            
-                            const btnOriginal = document.getElementById('modal-erro').querySelector('button').onclick;
-                            document.getElementById('modal-erro').querySelector('button').onclick = function() {
-                                fecharModal('modal-erro');
-                                window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank');
-                                setTimeout(() => window.location.reload(), 1000); 
-                            };
-                        }).catch(() => {
+                        // Uso de document.execCommand para garantir compatibilidade de cópia em IFrames
+                        const areaTexto = document.createElement('textarea');
+                        areaTexto.value = texto;
+                        document.body.appendChild(areaTexto);
+                        areaTexto.select();
+                        try {
+                            document.execCommand('copy');
+                        } catch (err) {
+                            console.error('Falha ao copiar', err);
+                        }
+                        document.body.removeChild(areaTexto);
+
+                        // Adapta modal de mensagem para indicar instrução amigável de envio de mídia
+                        document.getElementById('modal-erro-icone-container').className = "w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4";
+                        document.getElementById('modal-erro-icone').outerHTML = `<svg id="modal-erro-icone" class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+                        document.getElementById('modal-erro-titulo').innerText = "Tudo Pronto!";
+                        document.getElementById('msg-erro').innerText = "A imagem oficial da Fazenda Oásis (com logo) foi baixada!\n\nO texto formatado foi copiado automaticamente para sua área de transferência.\n\nNo WhatsApp, anexe a imagem e cole o texto na legenda para ficar tudo embaixo!";
+                        document.getElementById('modal-erro-btn').className = "w-full bg-green-600 text-white px-6 py-3 rounded-xl hover:bg-green-700 font-bold transition-colors";
+                        document.getElementById('modal-erro-btn').innerText = "Abrir WhatsApp Web";
+                        
+                        document.getElementById('modal-erro-btn').onclick = function() {
+                            fecharModal('modal-erro');
                             window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank');
-                        });
+                        };
+                        document.getElementById('modal-erro').classList.remove('hidden');
                     }
-                }, 'image/jpeg', 0.9);
+                }, 'image/jpeg', 0.95);
             });
         }
     </script>
